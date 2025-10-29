@@ -1,47 +1,83 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>AI DBA Health Check — Demo</title>
-  <style>
-    body{font-family:Arial,Helvetica,sans-serif;padding:22px;max-width:900px;margin:auto}
-    form label{display:block;margin:10px 0}
-    #ai-dba-result{margin-top:16px;padding:14px;border-radius:6px;background:#fafafa;border:1px solid #ddd;white-space:pre-wrap;display:none}
-    .muted{color:#666;font-size:13px}
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI DBA Health Check — Demo | Fortune Logix</title>
+  <link rel="stylesheet" href="css/ai-dba-demo.css">
 </head>
 <body>
-  <header>
-    <nav><a href="/">Home</a> · <a href="ai-dba-health-demo.html">AI DBA Health Check (Demo)</a></nav>
+  <header class="demo-header">
+    <div class="container header-inner">
+      <a class="brand" href="/">Fortune Logix</a>
+      <nav class="nav">
+        <a href="/">Home</a>
+        <a href="about.html">About</a>
+        <a href="ai-dba-health-demo.html" class="active">AI DBA Demo</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <h1>AI DBA Health Check — Demo</h1>
-    <p class="muted">This is a static demo. No API calls. Results are simulated for testing and lead capture stores to localStorage.</p>
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-left">
+        <h1>AI DBA Health Check — Demo</h1>
+        <p class="lead">Quickly simulate an Oracle DBA check. Beautiful, responsive UI — no backend required.</p>
+        <ul class="features">
+          <li>Fast diagnostics</li>
+          <li>Practical tuning steps</li>
+          <li>Demo lead capture (local only)</li>
+        </ul>
+      </div>
+      <div class="hero-right">
+        <img alt="Database illustration" src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=0" />
+      </div>
+    </div>
+  </section>
 
-    <form id="ai-dba-form">
-      <label>Database size (GB)
-        <input name="db_size" type="number" min="0" step="1" required>
-      </label>
+  <main class="container main-grid">
+    <section class="card form-card">
+      <h2>Run the Demo Health Check</h2>
+      <form id="ai-dba-form" class="demo-form">
+        <label>
+          Database size (GB)
+          <input name="db_size" type="number" min="0" step="1" required>
+        </label>
 
-      <label>Oracle version (e.g. 19c)
-        <input name="version" type="text" required>
-      </label>
+        <label>
+          Oracle version (e.g. 19c)
+          <input name="version" type="text" placeholder="19c" required>
+        </label>
 
-      <label>Symptoms / issues (brief)
-        <textarea name="issues" rows="4" required></textarea>
-      </label>
+        <label>
+          Symptoms / issues (brief)
+          <textarea name="issues" rows="4" placeholder="e.g. slow queries, high CPU" required></textarea>
+        </label>
 
-      <label>Your email (optional, for demo lead capture)
-        <input name="email" type="email">
-      </label>
+        <label>
+          Your email (optional)
+          <input name="email" type="email" placeholder="name@company.com">
+        </label>
 
-      <button id="ai-dba-submit" type="submit">Run Demo Health Check</button>
-    </form>
+        <div class="form-actions">
+          <button id="ai-dba-submit" type="submit" class="btn-primary">Run Demo Health Check</button>
+          <button id="ai-dba-reset" type="button" class="btn-ghost">Reset</button>
+        </div>
 
-    <section id="ai-dba-result" aria-live="polite"></section>
+        <p class="muted">This demo is client-side only. Leads are saved to localStorage.</p>
+      </form>
+    </section>
+
+    <aside class="card result-card" id="ai-dba-result" aria-live="polite" hidden>
+      <!-- result content populated by JS -->
+    </aside>
   </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; Fortune Logix — Demo mode. Deploy server backend to enable live AI.</p>
+    </div>
+  </footer>
 
   <script src="js/ai-dba-demo.js"></script>
 </body>
