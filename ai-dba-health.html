@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AI DBA Health Check — Fortune Logix</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>body{font-family:Arial,Helvetica,sans-serif;padding:24px}</style>
+</head>
+<body>
+  <header>
+    <nav>
+      <!-- add the nav snippet below into your site header/menu as well -->
+      <a href="/">Home</a> · <a href="ai-dba-health.html">AI DBA Health Check</a>
+    </nav>
+  </header>
+
+  <main style="max-width:900px;margin:24px auto;">
+    <h1>AI DBA Health Check Advisor</h1>
+    <p>Quick self-check for Oracle environments — get a short bottleneck summary and tuning suggestions.</p>
+
+    <form id="ai-dba-form">
+      <label>Database size (GB)<br/><input name="db_size" type="number" min="0" step="1" required></label><br><br>
+      <label>Oracle version (e.g. 19c)<br/><input name="version" type="text" required></label><br><br>
+      <label>Symptoms / issues (brief)<br/><textarea name="issues" rows="4" required></textarea></label><br><br>
+      <label>Your email (optional, for a free expert review)<br/><input name="email" type="email"></label><br><br>
+      <button id="ai-dba-submit" type="submit">Run Health Check</button>
+    </form>
+
+    <section id="ai-dba-result" style="margin-top:20px;white-space:pre-wrap;display:none;border:1px solid #ddd;padding:16px;border-radius:6px;background:#fafafa;"></section>
+  </main>
+
+  <script src="js/ai-dba.js"></script>
+</body>
+</html>
