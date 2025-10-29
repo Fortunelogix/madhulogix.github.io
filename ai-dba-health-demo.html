@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AI DBA Health Check — Demo</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;padding:22px;max-width:900px;margin:auto}
+    form label{display:block;margin:10px 0}
+    #ai-dba-result{margin-top:16px;padding:14px;border-radius:6px;background:#fafafa;border:1px solid #ddd;white-space:pre-wrap;display:none}
+    .muted{color:#666;font-size:13px}
+  </style>
+</head>
+<body>
+  <header>
+    <nav><a href="/">Home</a> · <a href="ai-dba-health-demo.html">AI DBA Health Check (Demo)</a></nav>
+  </header>
+
+  <main>
+    <h1>AI DBA Health Check — Demo</h1>
+    <p class="muted">This is a static demo. No API calls. Results are simulated for testing and lead capture stores to localStorage.</p>
+
+    <form id="ai-dba-form">
+      <label>Database size (GB)
+        <input name="db_size" type="number" min="0" step="1" required>
+      </label>
+
+      <label>Oracle version (e.g. 19c)
+        <input name="version" type="text" required>
+      </label>
+
+      <label>Symptoms / issues (brief)
+        <textarea name="issues" rows="4" required></textarea>
+      </label>
+
+      <label>Your email (optional, for demo lead capture)
+        <input name="email" type="email">
+      </label>
+
+      <button id="ai-dba-submit" type="submit">Run Demo Health Check</button>
+    </form>
+
+    <section id="ai-dba-result" aria-live="polite"></section>
+  </main>
+
+  <script src="js/ai-dba-demo.js"></script>
+</body>
+</html>
