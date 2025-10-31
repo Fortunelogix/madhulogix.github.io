@@ -1,101 +1,357 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>AI DBA — Security Vulnerability Scanner | Fortune Logix</title>
-  <link rel="stylesheet" href="css/ai-dba-demo.css">
+
+  <meta name="description" content="Interactive demo: Security Vulnerability Scanner for Oracle DBAs. Attractive UI, demo scan, findings & downloadable report.">
+
+  <style>
+  :root{
+    --bg:#f6f9fc; --card:#ffffff; --accent:#0d6efd; --accent-2:#06b6d4;
+    --muted:#6b7280; --radius:12px; --shadow: 0 10px 30px rgba(16,24,40,0.08);
+    --maxw:1200px; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:#071033;-webkit-font-smoothing:antialiased}
+  .container{max-width:var(--maxw);margin:0 auto;padding:18px}
+
+  /* Header */
+  .site-header{background:#fff;border-bottom:1px solid rgba(7,16,51,0.04)}
+  .header-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 20px}
+  .brand{font-weight:800;color:var(--accent);text-decoration:none;font-size:18px}
+  .nav{display:flex;gap:12px;align-items:center}
+  .nav a{color:#071033;text-decoration:none;padding:6px 8px;border-radius:8px;font-size:14px}
+  .nav a:hover{background:rgba(13,110,253,0.06)}
+  .nav-dropbtn{background:transparent;border:0;color:var(--accent);font-weight:700;cursor:pointer;padding:6px 8px;border-radius:6px}
+  .nav-dropmenu{position:absolute;left:0;top:48px;min-width:240px;background:#fff;border:1px solid rgba(7,16,51,0.06);box-shadow:0 12px 30px rgba(7,16,51,0.08);border-radius:10px;padding:8px;display:none;z-index:40}
+
+  /* Hero */
+  .hero{padding:28px 0}
+  .hero-inner{display:flex;gap:24px;align-items:center}
+  .hero-left{flex:1}
+  .hero-left h1{font-size:28px;margin:0 0 6px}
+  .lead{color:var(--muted);margin:0 0 12px}
+  .hero-media{display:flex;gap:12px;align-items:center}
+  .hero-video{width:420px;height:260px;border-radius:12px;object-fit:cover;box-shadow:var(--shadow);display:block}
+  .hero-visual{width:220px;height:160px;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+  .hero-visual img{width:100%;height:100%;object-fit:cover}
+
+  @media (max-width:980px){
+    .hero-inner{flex-direction:column}
+    .hero-video{width:100%;height:180px}
+    .hero-visual{display:none}
+  }
+
+  /* Main layout */
+  .main-grid{display:grid;grid-template-columns:1fr 420px;gap:22px;padding:18px 0}
+  @media (max-width:980px){ .main-grid{grid-template-columns:1fr} }
+
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+  .form-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  label{display:block;font-size:14px;margin-bottom:8px;color:#071033}
+  input[type="text"], select, input[type="file"]{
+    width:100%;padding:10px;border-radius:10px;border:1px solid #e6eef8;background:#fff;font-size:14px;
+  }
+  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;border:none;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
+  .btn-ghost{background:transparent;border:1px solid #e6eef8;padding:8px 12px;border-radius:10px;cursor:pointer}
+
+  .muted{color:var(--muted);font-size:13px}
+  .scan-progress{height:12px;background:#eef4ff;border-radius:8px;overflow:hidden;margin-top:12px}
+  .scan-progress .bar{height:100%;width:0;background:linear-gradient(90deg,#ff8a00,#ff3d00);transition:width 400ms ease}
+
+  /* Findings */
+  .findings-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px}
+  .finding{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:10px;border:1px solid rgba(7,16,51,0.04);background:linear-gradient(90deg,#fff,#fbfdff)}
+  .sev{min-width:84px;font-weight:700;padding:8px 10px;border-radius:8px;color:#fff;text-align:center}
+  .sev.high{background:#ef4444}
+  .sev.med{background:#f97316}
+  .sev.low{background:#10b981}
+  .finding-body{flex:1}
+  .finding-title{font-weight:700;margin:0 0 6px}
+  .finding-desc{color:var(--muted);margin:0 0 6px}
+
+  .download{display:inline-block;margin-top:12px}
+
+  /* mobile adjustments */
+  @media (max-width:600px){
+    .nav{display:none}
+    .header-inner{justify-content:space-between}
+  }
+  </style>
 </head>
 <body>
-  <!-- same header -->
-  
-  <header class="site-header" style="background:#fff;border-bottom:1px solid rgba(0,0,0,0.06);">
-  <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 18px;font-family:Inter,Arial,Helvetica,sans-serif">
-    <div style="display:flex;gap:18px;align-items:center">
-      <a href="/" style="font-weight:700;color:#0d6efd;text-decoration:none;font-size:18px">Fortune Logix</a>
-      <nav style="display:flex;gap:12px;align-items:center">
-        <a href="/" style="color:#111;text-decoration:none">Home</a>
-        <a href="about.html" style="color:#111;text-decoration:none">About</a>
-        <a href="services.html" style="color:#111;text-decoration:none">Services</a>
-          	<a href="gallery.html" style="color:#111;text-decoration:none">Gallery</a>		  
-        <!-- AI DBA dropdown -->
-        <div class="nav-dropdown" style="position:relative">
-          <button class="nav-dropbtn" aria-expanded="false" style="background:transparent;border:0;color:#0d6efd;font-weight:700;cursor:pointer;padding:6px 8px;border-radius:6px">AI DBA ▾</button>
-          <div class="nav-dropmenu" role="menu" style="position:absolute;left:0;top:38px;min-width:220px;background:#fff;border:1px solid rgba(0,0,0,0.08);box-shadow:0 8px 20px rgba(16,24,40,0.08);border-radius:10px;padding:8px;display:none;z-index:40">
-            <a role="menuitem" href="ai-dba-health-check.html" style="display:block;padding:10px;border-radius:6px;color:#0f172a;text-decoration:none">Health check advisor</a>
-            <a role="menuitem" href="ai-dba-security-scan.html" style="display:block;padding:10px;border-radius:6px;color:#0f172a;text-decoration:none">Security vulnerability scanner</a>
-            <a role="menuitem" href="ai-dba-recommender.html" style="display:block;padding:10px;border-radius:6px;color:#0f172a;text-decoration:none">Recommender</a>
-          </div>
-        </div>
-      </nav>
-    </div>
-    <div style="font-size:13px;color:#6b7280">Contact: <strong>sales@fortunelogix.com</strong></div>
-  </div>
-
-  <script>
-  // small dropdown behavior - keeps header responsive for touch
-  (function(){
-    var dd = document.currentScript && document.currentScript.previousElementSibling || document.querySelector('.nav-dropdown');
-    if(!dd) dd = document.querySelector('.nav-dropdown');
-    if(!dd) return;
-    var btn = dd.querySelector('.nav-dropbtn');
-    var menu = dd.querySelector('.nav-dropmenu');
-    function toggle(v){ menu.style.display = v ? 'block' : 'none'; btn.setAttribute('aria-expanded', !!v); }
-    btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(menu.style.display !== 'block'); });
-    document.addEventListener('click', function(){ toggle(false); });
-    // keyboard accessibility
-    btn.addEventListener('keydown', function(e){
-      if(e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(true); menu.querySelector('a').focus(); }
-      if(e.key === 'Escape') toggle(false);
-    });
-  })();
-  </script>
-</header>
-
-  <main style="max-width:1100px;margin:28px auto;padding:0 20px">
-    <section class="card">
-      <h1>Security Vulnerability Scanner (Demo)</h1>
-      <p class="muted">Upload a sample config or pick common checks. Demo highlights vulnerabilities and recommendations.</p>
-
-      <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:14px">
-        <div style="flex:1;min-width:320px">
-          <label style="display:block;margin-bottom:8px">Scan preset</label>
-          <select id="scan-preset">
-            <option value="quick">Quick security check</option>
-            <option value="full" selected>Full scanner (demo)</option>
-            <option value="compliance">Patch & compliance</option>
-          </select>
-
-          <label style="display:block;margin-top:12px">Upload sample DB config (optional)</label>
-          <input id="cfg-file" type="file" accept=".txt,.conf,.json">
-
-          <div style="margin-top:14px">
-            <button id="run-scan" class="btn-primary">Run Security Scan (demo)</button>
-            <button id="clear-scan" class="btn-ghost" style="margin-left:8px">Reset</button>
-          </div>
-        </div>
-
-        <aside style="width:420px;min-width:280px">
-          <div class="card" style="padding:14px">
-            <h4>Scan Summary</h4>
-            <div id="scan-summary" class="muted">No scan run yet.</div>
-            <div style="margin-top:12px">
-              <button id="download-report" class="btn-ghost" style="display:none">Download Report</button>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div style="display:flex;align-items:center;gap:18px">
+        <a class="brand" href="/">Fortune Logix</a>
+        <nav class="nav" aria-label="Main navigation">
+          <a href="/">Home</a>
+          <a href="about.html">About</a>
+          <a href="services.html">Services</a>
+          <div class="nav-dropdown" style="position:relative">
+            <button class="nav-dropbtn" aria-expanded="false">AI DBA ▾</button>
+            <div class="nav-dropmenu" role="menu">
+              <a role="menuitem" href="ai-dba-health-check.html" style="display:block;padding:8px;border-radius:6px;color:#071033;text-decoration:none">Health check advisor</a>
+              <a role="menuitem" href="ai-dba-security-scan.html" style="display:block;padding:8px;border-radius:6px;color:#071033;text-decoration:none">Security vulnerability scanner</a>
+              <a role="menuitem" href="ai-dba-recommender.html" style="display:block;padding:8px;border-radius:6px;color:#071033;text-decoration:none">Recommender</a>
             </div>
+          </div>
+        </nav>
+      </div>
+      <div style="font-size:13px;color:var(--muted)">Contact: <strong>sales@fortunelogix.com</strong></div>
+    </div>
+
+    <script>
+    (function(){
+      var dd = document.querySelector('.nav-dropdown');
+      if(!dd) return;
+      var btn = dd.querySelector('.nav-dropbtn');
+      var menu = dd.querySelector('.nav-dropmenu');
+      function toggle(v){ menu.style.display = v ? 'block' : 'none'; btn.setAttribute('aria-expanded', !!v); }
+      btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(menu.style.display !== 'block'); });
+      document.addEventListener('click', function(){ toggle(false); });
+      btn.addEventListener('keydown', function(e){
+        if(e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(true); menu.querySelector('a').focus(); }
+        if(e.key === 'Escape') toggle(false);
+      });
+    })();
+    </script>
+  </header>
+
+  <div class="container">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-left">
+          <h1>Security Vulnerability Scanner — Demo</h1>
+          <p class="lead">Attractive, interactive demo for Oracle DB security checks — instant findings, clear remediation and downloadable report.</p>
+          <div class="hero-media">
+            <video class="hero-video" playsinline autoplay muted loop poster="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg">
+              <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+            </video>
+            <div class="hero-visual card">
+              <img alt="Dashboard preview" src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop">
+            </div>
+          </div>
+        </div>
+
+        <aside style="width:320px">
+          <div class="card" style="padding:14px">
+            <h4 style="margin:0 0 8px">Why this matters</h4>
+            <p class="muted" style="margin:0 0 12px">Demonstrate security posture to customers — quick visual evidence helps convert leads.</p>
+            <ul style="margin:0 0 0 18px;color:var(--muted)">
+              <li>Highlight critical issues</li>
+              <li>Clear remediation steps</li>
+              <li>Downloadable report (demo)</li>
+            </ul>
           </div>
         </aside>
       </div>
-
-      <div id="scan-results" style="margin-top:16px;display:none">
-        <div class="card">
-          <h3>Findings</h3>
-          <ul id="findings-list"></ul>
-          <h4>Recommendations</h4>
-          <ol id="rec-list"></ol>
-        </div>
-      </div>
     </section>
-  </main>
 
-  <script src="js/ai-dba-security-demo.js"></script>
+    <main class="main-grid" aria-live="polite">
+      <section class="card">
+        <h3 style="margin:0 0 10px">Run a demo security scan</h3>
+
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <div style="flex:1;min-width:260px">
+            <label>Target (host or sample)</label>
+            <input id="target" type="text" placeholder="db.example.com or sample-config">
+
+            <label style="margin-top:12px">Scan preset</label>
+            <select id="scan-preset" aria-label="Scan preset">
+              <option value="quick">Quick security check</option>
+              <option value="full" selected>Full vulnerability scan (demo)</option>
+              <option value="compliance">Patch & compliance</option>
+            </select>
+
+            <label style="margin-top:12px">Upload sample config (optional)</label>
+            <input id="cfg-file" type="file" accept=".txt,.conf,.json">
+
+            <div style="margin-top:14px;display:flex;gap:10px">
+              <button id="run-scan" class="btn-primary">Run Security Scan (demo)</button>
+              <button id="clear-scan" class="btn-ghost">Reset</button>
+            </div>
+
+            <div class="scan-progress" aria-hidden="false">
+              <div class="bar" id="progress-bar" style="width:0%"></div>
+            </div>
+
+            <div style="margin-top:12px;font-size:13px;color:var(--muted)">The demo performs client-side simulated checks and produces a realistic-looking report for demo purposes only.</div>
+          </div>
+
+          <aside style="width:380px;min-width:260px">
+            <div class="card">
+              <h4 style="margin:0 0 8px">Scan summary</h4>
+              <div id="scan-summary" class="muted">No scan run yet.</div>
+
+              <div style="margin-top:12px">
+                <button id="download-report" class="btn-ghost download" style="display:none">Download Report</button>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top:12px">
+              <h4 style="margin:0 0 8px">Quick checks</h4>
+              <ul style="margin:0 0 0 18px;color:var(--muted)">
+                <li>Patch level</li>
+                <li>Password policy</li>
+                <li>Backup encryption</li>
+                <li>Exposed listeners</li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+
+        <div id="scan-results" style="margin-top:16px;display:none">
+          <div class="card">
+            <h4 style="margin:0 0 12px">Findings</h4>
+            <ul id="findings-list" class="findings-list"></ul>
+
+            <h4 style="margin:16px 0 8px">Recommendations</h4>
+            <ol id="rec-list"></ol>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer style="padding:28px 0;text-align:center;color:var(--muted);font-size:13px">
+    <div class="container">© Fortune Logix — Demo mode. For production enable server-side scanning and secure report exports.</div>
+  </footer>
+
+  <script>
+  (function(){
+    var run = document.getElementById('run-scan');
+    var clear = document.getElementById('clear-scan');
+    var preset = document.getElementById('scan-preset');
+    var summary = document.getElementById('scan-summary');
+    var results = document.getElementById('scan-results');
+    var findingsList = document.getElementById('findings-list');
+    var recList = document.getElementById('rec-list');
+    var dl = document.getElementById('download-report');
+    var progress = document.getElementById('progress-bar');
+
+    function setProgress(p){
+      progress.style.width = p + '%';
+    }
+
+    function makeFinding(title, severity, desc){
+      return { title: title, severity: severity, desc: desc };
+    }
+
+    function renderFindings(findings){
+      findingsList.innerHTML = '';
+      findings.forEach(function(f){
+        var li = document.createElement('li');
+        li.className = 'finding';
+        var sev = document.createElement('div');
+        sev.className = 'sev ' + (f.severity === 'High' ? 'high' : f.severity === 'Medium' ? 'med' : 'low');
+        sev.textContent = f.severity;
+        var body = document.createElement('div');
+        body.className = 'finding-body';
+        var h = document.createElement('div'); h.className='finding-title'; h.textContent = f.title;
+        var d = document.createElement('div'); d.className='finding-desc'; d.textContent = f.desc;
+        body.appendChild(h); body.appendChild(d);
+        li.appendChild(sev); li.appendChild(body);
+        findingsList.appendChild(li);
+      });
+    }
+
+    run.addEventListener('click', function(){
+      run.disabled = true;
+      findingsList.innerHTML = '';
+      recList.innerHTML = '';
+      results.style.display = 'none';
+      dl.style.display = 'none';
+      summary.textContent = 'Initializing demo scan...';
+      setProgress(6);
+
+      // simulate scanning phases
+      var phases = [
+        { t:700, p:30, txt:'Checking patch level...' },
+        { t:900, p:55, txt:'Analyzing password policies...' },
+        { t:700, p:75, txt:'Inspecting backup & encryption settings...' },
+        { t:800, p:92, txt:'Detecting exposed listeners & privileges...' },
+        { t:500, p:100, txt:'Finalizing report...' }
+      ];
+
+      var idx = 0;
+      function nextPhase(){
+        if(idx >= phases.length) return finalize();
+        var ph = phases[idx++];
+        summary.textContent = ph.txt;
+        setProgress(ph.p);
+        setTimeout(nextPhase, ph.t);
+      }
+
+      function finalize(){
+        // demo findings - vary slightly by preset
+        var findings = [
+          makeFinding('Unpatched DB kernel (demo)', 'High', 'Critical patch missing for known CVE; immediate attention recommended.'),
+          makeFinding('Weak password policy (demo)', 'Medium', 'Password complexity and rotation not enforced for admin accounts.'),
+          makeFinding('Backup encryption not enforced (demo)', 'Low', 'Backups appear unencrypted in sample config; consider enabling TDE and transport encryption.')
+        ];
+        if(preset.value === 'quick'){
+          findings = [findings[1], findings[2]];
+        } else if(preset.value === 'compliance'){
+          findings = [findings[0], findings[1]];
+        }
+
+        renderFindings(findings);
+
+        // recommendations
+        recList.innerHTML = '';
+        findings.forEach(function(f){
+          var r = document.createElement('li');
+          r.textContent = (f.severity === 'High' ? 'Immediate: ' : 'Recommended: ') + ' ' + (f.title + ' — ' + (f.severity === 'High' ? 'Patch and schedule maintenance.' : 'Review and remediate.'));
+          recList.appendChild(r);
+        });
+
+        summary.textContent = 'Scan complete — ' + findings.length + ' findings (demo)';
+        results.style.display = 'block';
+        dl.style.display = 'inline-block';
+        run.disabled = false;
+        setProgress(100);
+      }
+
+      nextPhase();
+    });
+
+    clear.addEventListener('click', function(){
+      summary.textContent = 'No scan run yet.';
+      findingsList.innerHTML = '';
+      recList.innerHTML = '';
+      results.style.display = 'none';
+      dl.style.display = 'none';
+      setProgress(0);
+    });
+
+    dl.addEventListener('click', function(){
+      // compile demo report -> JSON and offer download
+      var report = {
+        time: new Date().toISOString(),
+        target: document.getElementById('target').value || 'demo',
+        preset: preset.value,
+        findings: Array.prototype.slice.call(findingsList.querySelectorAll('.finding')).map(function(node){
+          return {
+            title: node.querySelector('.finding-title').textContent,
+            severity: node.querySelector('.sev').textContent,
+            desc: node.querySelector('.finding-desc').textContent
+          };
+        })
+      };
+      var blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'security-scan-demo-' + (new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')) + '.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    // initial state
+    clear.click();
+  })();
+  </script>
 </body>
 </html>
