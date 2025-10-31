@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AI DBA — Recommender | Fortune Logix</title>
+  <link rel="stylesheet" href="css/ai-dba-demo.css">
+</head>
+<body>
+  <!-- same header -->
+  <header class="site-header"> ...same header... </header>
+
+  <main style="max-width:1100px;margin:28px auto;padding:0 20px">
+    <section class="card">
+      <h1>Recommender</h1>
+      <p class="muted">Get prioritized recommendations for tuning, indexing, backups and upgrades.</p>
+
+      <div style="display:flex;gap:18px">
+        <div style="flex:1">
+          <label>Focus area</label>
+          <select id="rec-area">
+            <option value="performance">Performance</option>
+            <option value="backup">Backups & Recovery</option>
+            <option value="security">Security</option>
+            <option value="upgrade">Upgrade Planning</option>
+          </select>
+
+          <label style="margin-top:12px">Current constraints (pick)</label>
+          <label><input type="checkbox" id="c1"> Limited maintenance window</label>
+          <label><input type="checkbox" id="c2"> No downtime allowed</label>
+          <label><input type="checkbox" id="c3"> Budget constraint</label>
+
+          <div style="margin-top:12px">
+            <button id="run-rec" class="btn-primary">Generate Recommendations</button>
+            <button id="clear-rec" class="btn-ghost" style="margin-left:8px">Reset</button>
+          </div>
+        </div>
+
+        <aside style="width:420px">
+          <div class="card">
+            <h4>Top Recommendations</h4>
+            <ol id="rec-output"></ol>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/ai-dba-recommender.js"></script>
+</body>
+</html>
