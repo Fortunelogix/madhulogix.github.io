@@ -53,28 +53,101 @@
   </script>
 </header>
 
-  <main style="max-width:1200px;margin:28px auto;padding:0 20px">
-    <section class="card" style="padding:24px">
-      <h1 style="margin:0 0 8px">Health Check Advisor</h1>
-      <p class="muted">Minimal input, instant insights. Demo mode — no backend.</p>
-      <!-- reuse the polished form from demo -->
-      <!-- simplified include of form: reuse markup from ai-dba-health-demo with slider/select/checkboxes -->
-      <div id="health-check-area">
-        <!-- form will be handled by js/ai-dba-demo.js (already present) -->
-        <!-- copy same form markup as in AI demo or include via server include -->
-      </div>
-    </section>
-    <section id="health-sample" style="margin-top:18px">
-      <div class="card">
-        <h3>Why this matters</h3>
-        <p class="muted">Showcase quick screenshots, metrics and a short explainer video to impress visitors.</p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop" style="width:320px;border-radius:10px;object-fit:cover" alt="">
-          <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981d?q=80&w=800&auto=format&fit=crop" style="width:320px;border-radius:10px;object-fit:cover" alt="">
+<section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-left">
+        <h1>AI DBA Health Check — Interactive Demo</h1>
+        <p class="lead">Minimal input, instant diagnostics. Try the dropdowns and quick-check boxes — beautiful responsive UI with demo visualizations.</p>
+
+        <div class="media-card">
+          <!-- Decorative demo video (muted, autoplay, loop). Replace src with your marketing clip if available. -->
+          <video class="hero-video" playsinline autoplay muted loop poster="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg">
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+          </video>
         </div>
       </div>
+
+      <div class="hero-right">
+        <div class="card quick-actions">
+          <h3>Quick pick</h3>
+          <p class="muted">Choose a preset to populate form quickly</p>
+          <div class="presets">
+            <button class="preset" data-preset="small_perf">Small DB / Perf</button>
+            <button class="preset" data-preset="large_io">Large DB / I/O</button>
+            <button class="preset" data-preset="cpu_spike">High CPU</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container main-grid">
+    <section class="card form-card">
+      <h2>Run the Demo Health Check</h2>
+
+      <form id="ai-dba-form" class="demo-form">
+        <label class="row">
+          <span>Database size (GB)</span>
+          <div class="inline">
+            <input id="db_size_range" name="db_size" type="range" min="0" max="5000" step="1" value="50">
+            <input id="db_size_number" type="number" min="0" max="5000" value="50">
+          </div>
+        </label>
+
+        <label>
+          Oracle version
+          <select name="version" id="version">
+            <option value="23c">23c</option>
+            <option value="19c" selected>19c</option>
+            <option value="12c">12c</option>
+            <option value="11g">11g</option>
+            <option value="other">Other / Cloud</option>
+          </select>
+        </label>
+
+        <label>
+          Environment
+          <select name="environment">
+            <option>Production</option>
+            <option>Staging</option>
+            <option>Development</option>
+            <option>Cloud</option>
+          </select>
+        </label>
+
+        <fieldset class="symptoms">
+          <legend>Common symptoms (pick any)</legend>
+          <label><input type="checkbox" name="symptom" value="slow_queries"> Slow / long-running queries</label>
+          <label><input type="checkbox" name="symptom" value="high_cpu"> High CPU</label>
+          <label><input type="checkbox" name="symptom" value="high_io"> High I/O / wait</label>
+          <label><input type="checkbox" name="symptom" value="backup_fail"> Backup failures</label>
+          <label><input type="checkbox" name="symptom" value="replication"> Replication / lag</label>
+          <label><input type="checkbox" name="symptom" value="security"> Security / vulnerability concern</label>
+        </fieldset>
+
+        <label>
+          Your email (optional)
+          <input name="email" type="email" placeholder="name@company.com">
+        </label>
+
+        <div class="form-actions">
+          <button id="ai-dba-submit" type="submit" class="btn-primary">Run Demo Health Check</button>
+          <button id="ai-dba-reset" type="button" class="btn-ghost">Reset</button>
+        </div>
+        <p class="muted">Demo only — no backend. Leads saved locally when an expert review is recommended.</p>
+      </form>
     </section>
+
+    <aside class="card result-card" id="ai-dba-result" aria-live="polite" hidden>
+      <!-- Filled by JS -->
+    </aside>
   </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; Fortune Logix — Demo mode. Deploy server backend to enable live AI.</p>
+    </div>
+  </footer>
 
   <script src="js/ai-dba-demo.js"></script>
 </body>
