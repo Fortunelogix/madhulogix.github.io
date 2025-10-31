@@ -60,12 +60,53 @@
         <h1>AI DBA Health Check — Interactive Demo</h1>
         <p class="lead">Minimal input, instant diagnostics. Try the dropdowns and quick-check boxes</p>
 
+     <!--   
         <div class="media-card">
           <!-- Decorative demo video (muted, autoplay, loop). Replace src with your marketing clip if available. -->
           <video class="hero-video" playsinline autoplay muted loop poster="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg">
             <source src="AI Software Health.mp4" type="video/mp4">
           </video>
         </div>
+    -->
+      
+
+<div class="media-card">
+  <!-- Decorative demo video (muted, autoplay, loop). Replace src with your marketing clip if available. -->
+  <video class="hero-video" playsinline autoplay muted loop poster="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg">
+    <source src="AI Software Health.mp4" type="video/mp4">
+  </video>
+</div>
+
+<style>
+  .media-card {
+    width: 300px;            /* set desired size */
+    height: 300px;           /* same as width → perfect square */
+    border-radius: 20px;     /* optional: rounded corners */
+    overflow: hidden;        /* hides overflow */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;  /* fallback background */
+  }
+
+  .hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;       /* keeps video aspect nicely cropped */
+    border-radius: inherit;
+  }
+
+  /* Optional: make it responsive while keeping it square */
+  @media (max-width: 600px) {
+    .media-card {
+      width: 90vw;
+      height: 90vw;
+    }
+  }
+</style>
+
+
+        
       </div>
 
       <div class="hero-right">
