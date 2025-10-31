@@ -1,119 +1,59 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AI DBA Health Check — Demo | Fortune Logix</title>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AI DBA — Security Vulnerability Scanner | Fortune Logix</title>
   <link rel="stylesheet" href="css/ai-dba-demo.css">
 </head>
 <body>
-  <header class="demo-header">
-    <div class="container header-inner">
-      <a class="brand" href="/">Fortune Logix</a>
-      <nav class="nav">
-        <a href="/">Home</a>
-        <a href="about.html">About</a>
-        <a href="ai-dba-health-demo.html" class="active">AI DBA Demo</a>
-      </nav>
-    </div>
-  </header>
+  <!-- same header -->
+  <header class="site-header"> ...same header... </header>
 
-  <section class="hero">
-    <div class="container hero-inner">
-      <div class="hero-left">
-        <h1>AI DBA Health Check — Interactive Demo</h1>
-        <p class="lead">Minimal input, instant diagnostics. Try the dropdowns and quick-check boxes — beautiful responsive UI with demo visualizations.</p>
+  <main style="max-width:1100px;margin:28px auto;padding:0 20px">
+    <section class="card">
+      <h1>Security Vulnerability Scanner (Demo)</h1>
+      <p class="muted">Upload a sample config or pick common checks. Demo highlights vulnerabilities and recommendations.</p>
 
-        <div class="media-card">
-          <!-- Decorative demo video (muted, autoplay, loop). Replace src with your marketing clip if available. -->
-          <video class="hero-video" playsinline autoplay muted loop poster="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg">
-            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-          </video>
-        </div>
-      </div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:14px">
+        <div style="flex:1;min-width:320px">
+          <label style="display:block;margin-bottom:8px">Scan preset</label>
+          <select id="scan-preset">
+            <option value="quick">Quick security check</option>
+            <option value="full" selected>Full scanner (demo)</option>
+            <option value="compliance">Patch & compliance</option>
+          </select>
 
-      <div class="hero-right">
-        <div class="card quick-actions">
-          <h3>Quick pick</h3>
-          <p class="muted">Choose a preset to populate form quickly</p>
-          <div class="presets">
-            <button class="preset" data-preset="small_perf">Small DB / Perf</button>
-            <button class="preset" data-preset="large_io">Large DB / I/O</button>
-            <button class="preset" data-preset="cpu_spike">High CPU</button>
+          <label style="display:block;margin-top:12px">Upload sample DB config (optional)</label>
+          <input id="cfg-file" type="file" accept=".txt,.conf,.json">
+
+          <div style="margin-top:14px">
+            <button id="run-scan" class="btn-primary">Run Security Scan (demo)</button>
+            <button id="clear-scan" class="btn-ghost" style="margin-left:8px">Reset</button>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <main class="container main-grid">
-    <section class="card form-card">
-      <h2>Run the Demo Health Check</h2>
-
-      <form id="ai-dba-form" class="demo-form">
-        <label class="row">
-          <span>Database size (GB)</span>
-          <div class="inline">
-            <input id="db_size_range" name="db_size" type="range" min="0" max="5000" step="1" value="50">
-            <input id="db_size_number" type="number" min="0" max="5000" value="50">
+        <aside style="width:420px;min-width:280px">
+          <div class="card" style="padding:14px">
+            <h4>Scan Summary</h4>
+            <div id="scan-summary" class="muted">No scan run yet.</div>
+            <div style="margin-top:12px">
+              <button id="download-report" class="btn-ghost" style="display:none">Download Report</button>
+            </div>
           </div>
-        </label>
+        </aside>
+      </div>
 
-        <label>
-          Oracle version
-          <select name="version" id="version">
-            <option value="23c">23c</option>
-            <option value="19c" selected>19c</option>
-            <option value="12c">12c</option>
-            <option value="11g">11g</option>
-            <option value="other">Other / Cloud</option>
-          </select>
-        </label>
-
-        <label>
-          Environment
-          <select name="environment">
-            <option>Production</option>
-            <option>Staging</option>
-            <option>Development</option>
-            <option>Cloud</option>
-          </select>
-        </label>
-
-        <fieldset class="symptoms">
-          <legend>Common symptoms (pick any)</legend>
-          <label><input type="checkbox" name="symptom" value="slow_queries"> Slow / long-running queries</label>
-          <label><input type="checkbox" name="symptom" value="high_cpu"> High CPU</label>
-          <label><input type="checkbox" name="symptom" value="high_io"> High I/O / wait</label>
-          <label><input type="checkbox" name="symptom" value="backup_fail"> Backup failures</label>
-          <label><input type="checkbox" name="symptom" value="replication"> Replication / lag</label>
-          <label><input type="checkbox" name="symptom" value="security"> Security / vulnerability concern</label>
-        </fieldset>
-
-        <label>
-          Your email (optional)
-          <input name="email" type="email" placeholder="name@company.com">
-        </label>
-
-        <div class="form-actions">
-          <button id="ai-dba-submit" type="submit" class="btn-primary">Run Demo Health Check</button>
-          <button id="ai-dba-reset" type="button" class="btn-ghost">Reset</button>
+      <div id="scan-results" style="margin-top:16px;display:none">
+        <div class="card">
+          <h3>Findings</h3>
+          <ul id="findings-list"></ul>
+          <h4>Recommendations</h4>
+          <ol id="rec-list"></ol>
         </div>
-        <p class="muted">Demo only — no backend. Leads saved locally when an expert review is recommended.</p>
-      </form>
+      </div>
     </section>
-
-    <aside class="card result-card" id="ai-dba-result" aria-live="polite" hidden>
-      <!-- Filled by JS -->
-    </aside>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>&copy; Fortune Logix — Demo mode. Deploy server backend to enable live AI.</p>
-    </div>
-  </footer>
-
-  <script src="js/ai-dba-demo.js"></script>
+  <script src="js/ai-dba-security-demo.js"></script>
 </body>
 </html>
