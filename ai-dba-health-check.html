@@ -62,40 +62,80 @@
 
  
 <div class="media-card">
-  <!-- Decorative demo video (muted, autoplay, loop). Replace src with your marketing clip if available. -->
-  <video class="hero-video" playsinline autoplay muted loop poster="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg">
+  <!-- Video Section -->
+  <video id="heroVideo" class="hero-video" playsinline autoplay muted loop poster="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg">
     <source src="AI Software Health.mp4" type="video/mp4">
+    Your browser does not support the video tag.
   </video>
+
+  <!-- Audio Toggle Button -->
+  <button id="audioToggle" class="audio-btn" title="Toggle Sound">🔇</button>
 </div>
 
 <style>
   .media-card {
-    width: 300px;            /* set desired size */
-    height: 500px;           /* same as width → perfect square */
-    border-radius: 20px;     /* optional: rounded corners */
-    overflow: hidden;        /* hides overflow */
+    width: 300px;
+    height: 300px;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #000;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #000;  /* fallback background */
   }
 
   .hero-video {
     width: 100%;
     height: 100%;
-    object-fit: cover;       /* keeps video aspect nicely cropped */
+    object-fit: cover;
     border-radius: inherit;
   }
 
-  /* Optional: make it responsive while keeping it square */
+  .audio-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+  }
+
+  .audio-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
   @media (max-width: 600px) {
     .media-card {
       width: 90vw;
-      height: 180vw;
+      height: 90vw;
     }
   }
 </style>
 
+<script>
+  const video = document.getElementById('heroVideo');
+  const audioToggle = document.getElementById('audioToggle');
+
+  audioToggle.addEventListener('click', () => {
+    if (video.muted) {
+      video.muted = false;
+      audioToggle.textContent = '🔊';
+    } else {
+      video.muted = true;
+      audioToggle.textContent = '🔇';
+    }
+  });
+</script>
 
         
       </div>
