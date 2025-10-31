@@ -26,7 +26,7 @@
     .hero-left{flex:1}
     .hero-left h1{font-size:28px;margin:0 0 8px}
     .lead{color:var(--muted);margin:0 0 12px}
-    .hero-media{display:flex;gap:12px;align-items:center}
+    .hero-media{display:flex;gap:12px;align-items:center;width:100%}
     .hero-media img, .hero-media video{width:100%;max-width:460px;border-radius:12px;box-shadow:var(--shadow);height:260px;object-fit:cover}
 
     .grid{display:grid;grid-template-columns:1fr 420px;gap:22px;margin-top:22px}
@@ -69,7 +69,14 @@
         <a href="/" >Home</a>
         <a href="about.html">About</a>
         <a href="services.html">Services</a>
-        <a href="ai-dba-recommender.html" class="active">AI DBA</a>
+        <div style="position:relative">
+          <button id="ai-dba-btn" aria-haspopup="true">AI DBA ▾</button>
+          <div id="ai-dba-menu" style="display:none;position:absolute;top:36px;left:0;background:#fff;border-radius:8px;padding:8px;box-shadow:0 8px 20px rgba(0,0,0,0.08)">
+            <a href="ai-dba-health-check.html" style="display:block;padding:6px">Health check advisor</a>
+            <a href="ai-dba-security-scan.html" style="display:block;padding:6px">Security vulnerability scanner</a>
+            <a href="ai-dba-recommender.html" style="display:block;padding:6px">Recommender</a>
+          </div>
+        </div>
       </nav>
     </header>
 
@@ -78,11 +85,22 @@
         <h1>Recommender — Prioritized DB Actions</h1>
         <p class="lead">Generate customer-ready, prioritized recommendations for performance, backup, security, and upgrades. Minimal input, instant results — demo mode.</p>
 
-        <div class="hero-media">
-          <video playsinline autoplay muted loop poster="https://images.unsplash.com/photo-1509395176047-4a66953fd231?q=80&w=1200&auto=format&fit=crop" style="border-radius:12px">
+        <div class="hero-media" aria-hidden="false">
+          <video playsinline autoplay muted loop poster="https://images.unsplash.com/photo-1509395176047-4a66953fd231?q=80&w=1200&auto=format&fit=crop" style="border-radius:12px;max-width:460px">
             <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"/>
           </video>
-          <img alt="Recommender dashboard" src="https://images.unsplash.com/photo-1552864949-1b3e7d5e1c6a?q=80&w=1200&auto=format&fit=crop"/>
+
+          <!-- responsive picture with lazy loading and inline SVG fallback -->
+          <picture style="display:block;max-width:460px;">
+            <source srcset="https://images.unsplash.com/photo-1552864949-1b3e7d5e1c6a?q=80&w=1200&auto=format&fit=crop" media="(min-width:540px)">
+            <source srcset="https://images.unsplash.com/photo-1552864949-1b3e7d5e1c6a?q=80&w=800&auto=format&fit=crop" media="(max-width:539px)">
+            <img id="recommender-img"
+                 alt="Recommender dashboard"
+                 loading="lazy"
+                 decoding="async"
+                 style="border-radius:12px;box-shadow:var(--shadow);width:100%;height:260px;object-fit:cover"
+                 src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450'><rect width='100%' height='100%' fill='%23f3f7fb'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%236b7280' font-size='20'>Recommender dashboard</text></svg>" />
+          </picture>
         </div>
       </div>
 
@@ -160,6 +178,48 @@
   </div>
 
   <script>
+    // dropdown menu
+    (function(){
+      var btn = document.getElementById('ai-dba-btn');
+      var menu = document.getElementById('ai-dba-menu');
+      if(!btn || !menu) return;
+      function toggle(v){ menu.style.display = v ? 'block' : 'none'; btn.setAttribute('aria-expanded', !!v); }
+      btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(menu.style.display !== 'block'); });
+      document.addEventListener('click', function(){ toggle(false); });
+    })();
+
+    // image fallback + preload
+    document.addEventListener('DOMContentLoaded', function () {
+      // robust fallback for recommender image
+      var img = document.getElementById('recommender-img');
+      var remote = 'https://images.unsplash.com/photo-1552864949-1b3e7d5e1c6a?q=80&w=1200&auto=format&fit=crop';
+      if(img){
+        img.addEventListener('error', function onErr(){
+          if (this.dataset.fallbackApplied) return;
+          this.dataset.fallbackApplied = '1';
+          this.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450'><rect width='100%' height='100%' fill='%23f3f7fb'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%236b7280' font-size='18'>Image not available</text></svg>";
+          this.removeEventListener('error', onErr);
+        });
+        // preload remote and swap if OK
+        var pre = new Image();
+        pre.crossOrigin = 'anonymous';
+        pre.onload = function(){ if(!img.dataset.fallbackApplied) img.src = remote; };
+        pre.onerror = function(){ /* keep inline SVG fallback */ };
+        pre.src = remote;
+      }
+
+      // upgrade all broken images across page to fallback
+      document.querySelectorAll('img').forEach(function(i){
+        i.addEventListener('error', function onErr(){
+          if (this.dataset.fallbackApplied) return;
+          this.dataset.fallbackApplied = '1';
+          this.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450'><rect width='100%' height='100%' fill='%23f3f7fb'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%236b7280' font-size='18'>Image not available</text></svg>";
+          this.removeEventListener('error', onErr);
+        });
+      });
+    });
+
+    // recommender logic
     (function(){
       var gen = document.getElementById('gen');
       var clear = document.getElementById('clear');
@@ -172,64 +232,54 @@
       var download = document.getElementById('download');
       var chips = document.querySelectorAll('.chip');
 
-      // preset chip behavior
       chips.forEach(function(c){
         c.addEventListener('click', function(){
           chips.forEach(function(x){ x.classList.remove('active'); });
           c.classList.add('active');
           var p = c.getAttribute('data-preset');
           focus.value = p === 'performance' ? 'performance' : p === 'backup' ? 'backup' : p === 'security' ? 'security' : p === 'upgrade' ? 'upgrade' : 'performance';
-          // set common constraint defaults
           document.querySelectorAll('.constraint').forEach(function(cb){ cb.checked = false; });
-          if(p === 'performance') { document.querySelector('input[value="limited_window"]').checked = true; }
-          if(p === 'backup') { document.querySelector('input[value="backup"]'); /* no op - placeholder */ }
-          if(p === 'security') { document.querySelector('input[value="no_downtime"]').checked = true; }
+          if(p === 'performance') { var el = document.querySelector('input[value="limited_window"]'); if(el) el.checked = true; }
+          if(p === 'security') { var el = document.querySelector('input[value="no_downtime"]'); if(el) el.checked = true; }
         });
       });
 
       function generate(payload){
-        // simple rules to create recommendations
         var size = parseInt((payload.db_size||'0').replace(/\D/g,'')) || 0;
         var constraints = payload.constraints || [];
         var recs = [];
         var meta = { estimated_impact: 'Medium', urgency: 'Normal' };
+        function push(title, desc, priority){ recs.push({ title: title, desc: desc, priority: priority }); }
 
-        function push(title, desc, priority){
-          recs.push({ title: title, desc: desc, priority: priority });
-        }
-
-        // base by focus
         if(payload.focus === 'performance'){
-          push('Run AWR & identify top 5 SQL', 'Collect AWR/ASH and tune top consuming statements.', 'High');
-          push('Tune PGA/SGA and optimizer stats', 'Adjust memory and gather stats to improve plans.', 'Medium');
-          if(size > 500) push('Consider partitioning large tables', 'Partition very large tables by date or range for performance.', 'High');
+          push('Run AWR & identify top 5 SQL','Collect AWR/ASH and tune top consuming statements.','High');
+          push('Tune PGA/SGA and optimizer stats','Adjust memory and gather stats to improve plans.','Medium');
+          if(size > 500) push('Consider partitioning large tables','Partition very large tables by date or range for performance.','High');
         } else if(payload.focus === 'backup'){
-          push('Verify backup & retention', 'Ensure incremental backups + verification are in place.', 'High');
-          push('Enable backup encryption', 'Encrypt backups at rest and in transit (TDE + network encryption).', 'Medium');
+          push('Verify backup & retention','Ensure incremental backups + verification are in place.','High');
+          push('Enable backup encryption','Encrypt backups at rest and in transit (TDE + network encryption).','Medium');
         } else if(payload.focus === 'security'){
-          push('Apply critical security patches', 'Update DB patch set to mitigate known CVEs.', 'High');
-          push('Enforce password & session policies', 'Implement complexity and rotation policies and MFA where possible.', 'Medium');
+          push('Apply critical security patches','Update DB patch set to mitigate known CVEs.','High');
+          push('Enforce password & session policies','Implement complexity and rotation policies and MFA where possible.','Medium');
         } else if(payload.focus === 'upgrade'){
-          push('Plan staged upgrade', 'Test and stage upgrade in a mirrored environment before production rollout.', 'High');
-          push('Review deprecated features', 'Identify deprecated features and prepare migration steps.', 'Medium');
+          push('Plan staged upgrade','Test and stage upgrade in a mirrored environment before production rollout.','High');
+          push('Review deprecated features','Identify deprecated features and prepare migration steps.','Medium');
         } else {
-          push('Run baseline assessment', 'Collect performance and config baseline for trend analysis.', 'Medium');
+          push('Run baseline assessment','Collect performance and config baseline for trend analysis.','Medium');
         }
 
-        // constraints adjustments
         if(constraints.indexOf('no_downtime') !== -1){
-          push('Use rolling/online operations where possible', 'Prefer online patching and rolling upgrades to avoid downtime.', 'High');
+          push('Use rolling/online operations where possible','Prefer online patching and rolling upgrades to avoid downtime.','High');
           meta.estimated_impact = 'Lower if no downtime allowed';
         }
         if(constraints.indexOf('budget') !== -1){
-          push('Prioritize low-cost quick wins', 'Index tuning and statistics typically provide high ROI with low cost.', 'Medium');
+          push('Prioritize low-cost quick wins','Index tuning and statistics typically provide high ROI with low cost.','Medium');
           meta.estimated_impact = 'Cost-sensitive';
         }
         if(constraints.indexOf('cloud') !== -1){
-          push('Leverage managed services features', 'Use cloud-native backup and monitoring if available to reduce ops overhead.', 'Medium');
+          push('Leverage managed services features','Use cloud-native backup and monitoring if available to reduce ops overhead.','Medium');
         }
 
-        // de-duplicate and sort by priority (High, Medium, Low)
         var order = { High: 0, Medium: 1, Low: 2 };
         var unique = {};
         recs = recs.filter(function(r){
@@ -239,7 +289,6 @@
           return true;
         }).sort(function(a,b){ return order[a.priority] - order[b.priority]; });
 
-        // set urgency
         if(recs.some(r => r.priority === 'High')) meta.urgency = 'Immediate';
         return { recs: recs, meta: meta };
       }
@@ -276,7 +325,6 @@
           var payload = collectPayload();
           var out = generate(payload);
           render(out);
-          // prepare download
           var report = { generated: new Date().toISOString(), payload: payload, recommendations: out.recs, meta: out.meta };
           download.style.display = 'inline-flex';
           download.onclick = function(){
@@ -293,10 +341,8 @@
         focus.value = 'performance'; dbSize.value = ''; notes.value = ''; document.querySelectorAll('.constraint').forEach(function(cb){ cb.checked = false; }); rc.innerHTML = ''; results.style.display = 'none'; download.style.display = 'none';
       });
 
-      // keyboard-friendly: press Enter on db-size to generate
       dbSize.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); gen.click(); } });
 
-      // initialize
       clear.click();
     })();
   </script>
